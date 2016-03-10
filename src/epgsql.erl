@@ -3,7 +3,7 @@
 
 -module(epgsql).
 
--export([connect/1, connect/2, connect/3, connect/4, connect/5,
+-export([start_link/1,
          close/1,
          get_parameter/2,
          squery/2,
@@ -63,17 +63,11 @@
 -type reply(RowType) :: ok_reply(RowType) | error_reply().
 
 %% -- client interface --
-connect(Settings) ->
+start_link(Settings) ->
 	Host = proplists:get_value(host, Settings, "localhost"),
 	Username = proplists:get_value(username, Settings, os:getenv("USER")),
 	Password = proplists:get_value(password, Settings, ""),
 	connect(Host, Username, Password, Settings).
-
-connect(Host, Opts) ->
-    connect(Host, os:getenv("USER"), "", Opts).
-
-connect(Host, Username, Opts) ->
-    connect(Host, Username, "", Opts).
 
 -spec connect(host(), string(), string(), [connect_option()])
         -> {ok, Connection :: connection()} | {error, Reason :: connect_error()}.
